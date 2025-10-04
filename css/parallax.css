@@ -1,0 +1,18 @@
+/* This makes sure our parallax background covers the whole area */
+.parallax-bg {
+    background-attachment: fixed; /* This is the magic trick for parallax! */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative; /* So other things can be placed on top */
+    height: 500px; /* Give it some height to see the effect */
+}
+
+/* Example of how to use it */
+.section-one {
+    background-image: url('https://via.placeholder.com/1500x800/66A7CC/FFFFFF?text=Parallax+Section+1'); /* Using Sky Blue */
+}
+
+.section-two {
+    background-image: url('https://via.placeholder.com/1500x800/FFE4B4/000000?text=Parallax+Section+2'); /* Using Munsell */
+}
