@@ -718,15 +718,27 @@
                                         
                                         <!-- Spin Wheel -->
                                         <div style="margin: 20px 0; text-align: center;">
-                                            <div id="spin-wheel" style="width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(from 0deg, #e74c3c 0deg 72deg, #f39c12 72deg 144deg, #27ae60 144deg 216deg, #3498db 216deg 288deg, #9b59b6 288deg 360deg); margin: 0 auto; position: relative; border: 4px solid #fff; box-shadow: 0 8px 20px rgba(0,0,0,0.2); cursor: pointer; transition: transform 2s ease-out;">
-                                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.9); border-radius: 50%;">
-                                                    <div style="text-align: center;">
-                                                        <div style="font-size: 20px; margin-bottom: 5px;">🎯</div>
-                                                        <div style="font-size: 10px; font-weight: bold; color: #2c3e50; line-height: 1.2;">SPIN<br>FOR<br>QUESTION</div>
+                                            <div class="wheel-container" style="position: relative; display: inline-block;">
+                                                <div id="spin-wheel" class="wheel" style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(from 0deg at 50% 50%, #ff6b6b 0deg 60deg, #4ecdc4 60deg 120deg, #45b7d1 120deg 180deg, #96ceb4 180deg 240deg, #ffeaa7 240deg 300deg, #dda0dd 300deg 360deg); margin: 0 auto; position: relative; border: 8px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.1); cursor: pointer; transition: transform 3s cubic-bezier(0.23, 1, 0.32, 1); transform-origin: center;">
+                                                    <!-- Wheel segments with labels -->
+                                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; border-radius: 50%; overflow: hidden;">
+                                                        <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); text-align: center; color: white; font-weight: bold; font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Q1</div>
+                                                        <div style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); color: white; font-weight: bold; font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); writing-mode: vertical-rl;">Q2</div>
+                                                        <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center; color: white; font-weight: bold; font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Q3</div>
+                                                        <div style="position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: white; font-weight: bold; font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); writing-mode: vertical-rl;">Q4</div>
+                                                        <div style="position: absolute; top: 25%; right: 25%; color: white; font-weight: bold; font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Q5</div>
+                                                        <div style="position: absolute; top: 25%; left: 25%; color: white; font-weight: bold; font-size: 12px; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Q6</div>
+                                                    </div>
+                                                    <!-- Center circle -->
+                                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: linear-gradient(145deg, #fff, #f0f0f0); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2), inset 0 2px 4px rgba(0,0,0,0.1); border: 3px solid #333;">
+                                                        <div style="text-align: center;">
+                                                            <div style="font-size: 20px; margin-bottom: 2px;">🎯</div>
+                                                            <div style="font-size: 8px; font-weight: bold; color: #333; line-height: 1;">SPIN</div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <!-- Pointer -->
-                                                <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 15px solid #e74c3c;"></div>
+                                                <div class="pointer" style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ff4757; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); z-index: 10;"></div>
                                             </div>
                                         </div>
                                         
@@ -1930,20 +1942,129 @@
         isSpinning = true;
         spinInstruction.textContent = '🎰 Spinning... 🎰';
         
-        // Random rotation (multiple full spins + random angle)
-        const randomSpins = Math.floor(Math.random() * 5) + 3; // 3-7 full spins
+        // Random rotation with more spins for better effect
+        const randomSpins = Math.floor(Math.random() * 8) + 5; // 5-12 full spins
         const randomAngle = Math.floor(Math.random() * 360); // 0-359 degrees
         const totalRotation = (randomSpins * 360) + randomAngle;
         
         spinWheel.style.transform = `rotate(${totalRotation}deg)`;
         
-        // Show start button after spin completes
+        // Show random question after spin completes
         setTimeout(() => {
-            startBtn.style.display = 'inline-block';
-            spinInstruction.style.display = 'none';
+            showRandomQuestion();
             isSpinning = false;
-        }, 2000);
+        }, 3000);
     });
+
+    function showRandomQuestion() {
+        // Get random question
+        const randomIndex = Math.floor(Math.random() * quizQuestions.length);
+        const question = quizQuestions[randomIndex];
+        
+        // Create question popup
+        const questionPopup = document.createElement('div');
+        questionPopup.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 3px solid #74b9ff;
+            z-index: 1000;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        `;
+        
+        questionPopup.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 30px; margin-bottom: 15px;">🎯</div>
+                <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 18px; line-height: 1.4;">${question.question}</h3>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;">
+                    <button class="popup-true-btn" style="background: linear-gradient(145deg, #27ae60, #2ecc71); color: white; padding: 12px 25px; border: none; border-radius: 15px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);">
+                        ✅ TRUE
+                    </button>
+                    <button class="popup-false-btn" style="background: linear-gradient(145deg, #e74c3c, #c0392b); color: white; padding: 12px 25px; border: none; border-radius: 15px; font-size: 14px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2);">
+                        ❌ FALSE
+                    </button>
+                </div>
+                <button class="close-popup-btn" style="background: linear-gradient(145deg, #95a5a6, #7f8c8d); color: white; padding: 8px 20px; border: none; border-radius: 10px; font-size: 12px; cursor: pointer;">
+                    Close
+                </button>
+            </div>
+        `;
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        `;
+        
+        document.body.appendChild(overlay);
+        document.body.appendChild(questionPopup);
+        
+        // Add event listeners
+        const trueBtn = questionPopup.querySelector('.popup-true-btn');
+        const falseBtn = questionPopup.querySelector('.popup-false-btn');
+        const closeBtn = questionPopup.querySelector('.close-popup-btn');
+        
+        trueBtn.addEventListener('click', () => handlePopupAnswer(true, question, questionPopup, overlay));
+        falseBtn.addEventListener('click', () => handlePopupAnswer(false, question, questionPopup, overlay));
+        closeBtn.addEventListener('click', () => {
+            document.body.removeChild(overlay);
+            document.body.removeChild(questionPopup);
+            spinInstruction.textContent = 'Click the wheel to spin again!';
+        });
+        
+        overlay.addEventListener('click', () => {
+            document.body.removeChild(overlay);
+            document.body.removeChild(questionPopup);
+            spinInstruction.textContent = 'Click the wheel to spin again!';
+        });
+    }
+
+    function handlePopupAnswer(userAnswer, question, popup, overlay) {
+        const isCorrect = userAnswer === question.answer;
+        
+        // Update popup with result
+        popup.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 40px; margin-bottom: 15px;">${isCorrect ? '🎉' : '💡'}</div>
+                <h3 style="color: ${isCorrect ? '#27ae60' : '#e74c3c'}; margin-bottom: 15px; font-size: 18px;">
+                    ${isCorrect ? 'Correct!' : 'Good try!'}
+                </h3>
+                <p style="color: #2c3e50; margin-bottom: 20px; font-size: 14px; line-height: 1.5; background: #f8f9fa; padding: 15px; border-radius: 10px; border-left: 4px solid ${isCorrect ? '#27ae60' : '#e74c3c'};">
+                    ${question.explanation}
+                </p>
+                <button class="close-popup-btn" style="background: linear-gradient(145deg, #74b9ff, #0984e3); color: white; padding: 10px 25px; border: none; border-radius: 15px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(116, 185, 255, 0.3);">
+                    Spin Again! 🎰
+                </button>
+            </div>
+        `;
+        
+        // Add celebration for correct answers
+        if (isCorrect) {
+            showCelebrationPopup();
+        }
+        
+        // Add close event listener
+        const closeBtn = popup.querySelector('.close-popup-btn');
+        closeBtn.addEventListener('click', () => {
+            document.body.removeChild(overlay);
+            document.body.removeChild(popup);
+            spinInstruction.textContent = 'Click the wheel to spin again!';
+        });
+    }
 
         // Debug: Check if quiz elements are found
         window.addEventListener('load', function() {
